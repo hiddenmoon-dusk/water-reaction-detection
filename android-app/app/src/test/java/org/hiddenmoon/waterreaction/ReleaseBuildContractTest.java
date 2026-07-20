@@ -51,4 +51,20 @@ public class ReleaseBuildContractTest {
         assertTrue(text.contains("minSdk 34"));
         assertTrue(text.contains("targetSdk 36"));
     }
+
+    @Test
+    public void launcherIconContractIsDeclared() throws Exception {
+        Path appModule = buildFile().getParent();
+        Path manifest = appModule.resolve("src/main/AndroidManifest.xml");
+        String manifestText = new String(Files.readAllBytes(manifest), StandardCharsets.UTF_8);
+
+        assertTrue(manifestText.contains("android:icon=\"@mipmap/ic_launcher\""));
+        assertTrue(manifestText.contains("android:roundIcon=\"@mipmap/ic_launcher_round\""));
+        assertTrue(Files.isRegularFile(
+                appModule.resolve("src/main/res/mipmap-anydpi-v26/ic_launcher.xml")));
+        assertTrue(Files.isRegularFile(
+                appModule.resolve("src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml")));
+        assertTrue(Files.isRegularFile(
+                appModule.resolve("src/main/res/drawable/ic_launcher_foreground.xml")));
+    }
 }

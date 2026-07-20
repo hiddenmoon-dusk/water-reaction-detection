@@ -6,6 +6,8 @@ param(
     [string]$ApiBaseUrl = '',
     [string]$BootstrapToken = '',
     [string]$ReleaseBatchId = '',
+    [int]$ModelGeneration = 0,
+    [int]$DatasetGeneration = 0,
     [string]$InnoSetupPath = '',
     [string]$SignToolPath = '',
     [switch]$RequireInstaller,
@@ -51,14 +53,29 @@ New-Item -ItemType Directory -Force -Path $packageRoot | Out-Null
 Get-ChildItem -LiteralPath $DistDirectory -Force |
     Where-Object { $_.Name -ne '结果' } |
     Copy-Item -Destination $packageRoot -Recurse -Force
+$userGuide = Join-Path $repo 'docs\中文使用说明.md'
+if (-not (Test-Path -LiteralPath $userGuide -PathType Leaf)) {
+    throw "缺少中文使用说明：$userGuide"
+}
+Copy-Item -LiteralPath $userGuide -Destination (Join-Path $packageRoot '中文使用说明.md') -Force
 
 $releaseConfigPath = Join-Path $packageRoot 'release.json'
 $releaseConfig = Get-Content -Raw -LiteralPath $releaseConfigPath | ConvertFrom-Json
+$manifestModelGeneration = [int]$releaseConfig.model_generation
+$manifestDatasetGeneration = [int]$releaseConfig.dataset_generation
+if ($ModelGeneration -le 0) { $ModelGeneration = $manifestModelGeneration }
+if ($DatasetGeneration -le 0) { $DatasetGeneration = $manifestDatasetGeneration }
+if ($ModelGeneration -le 0 -or $DatasetGeneration -le 0) {
+    throw '正式发布的 model_generation/dataset_generation 必须大于 0'
+}
+$releaseConfig | Add-Member -MemberType NoteProperty -Name release_batch_id -Value $ReleaseBatchId -Force
 $releaseConfig.app_release_id = "$ReleaseBatchId-desktop"
+$releaseConfig.model_generation = $ModelGeneration
+$releaseConfig.dataset_generation = $DatasetGeneration
 $releaseConfig.api_base_url = $ApiBaseUrl.TrimEnd('/')
 $releaseConfig.bootstrap_token = $BootstrapToken
-$releaseConfig.app_version_code = 6
-$releaseConfig.app_version_name = $VersionName
+$releaseConfig | Add-Member -MemberType NoteProperty -Name app_version_code -Value 6 -Force
+$releaseConfig | Add-Member -MemberType NoteProperty -Name app_version_name -Value $VersionName -Force
 $releaseConfig | ConvertTo-Json -Depth 4 | Set-Content -LiteralPath $releaseConfigPath -Encoding UTF8
 
 if ($RequireCodeSigning) {
@@ -78,7 +95,7 @@ if ($RequireCodeSigning) {
 
 $zipPath = Join-Path $OutputDirectory "water-detection-desktop-v$VersionName-win64.zip"
 if (Test-Path -LiteralPath $zipPath) { Remove-Item -LiteralPath $zipPath -Force }
-Compress-Archive -Path $packageRoot -DestinationPath $zipPath -CompressionLevel Optimal
+Compress-Archive -Path (Join-Path $packageRoot '*') -DestinationPath $zipPath -CompressionLevel Optimal
 
 if (-not $InnoSetupPath) { $InnoSetupPath = $env:INNO_SETUP_PATH }
 if (-not $InnoSetupPath) {
@@ -91,9 +108,14 @@ if (-not $InnoSetupPath) {
 }
 $installerPath = Join-Path $OutputDirectory "water-detection-desktop-v$VersionName-setup.exe"
 if ($InnoSetupPath) {
+    $iconFile = Join-Path $repo 'packaging\windows\water-reaction-icon.ico'
+    if (-not (Test-Path -LiteralPath $iconFile -PathType Leaf)) {
+        throw "Windows 安装包缺少图标：$iconFile"
+    }
     $env:WATER_DESKTOP_VERSION = $VersionName
     $env:WATER_DESKTOP_DIST_DIR = $packageRoot
     $env:WATER_WINDOWS_OUTPUT_DIR = $OutputDirectory
+    $env:WATER_WINDOWS_ICON_FILE = $iconFile
     & $InnoSetupPath (Join-Path $repo 'packaging\windows\water-detection.iss')
     if ($LASTEXITCODE -ne 0) { throw 'Inno Setup 安装包构建失败' }
     if ($RequireCodeSigning) {
@@ -110,6 +132,8 @@ $metadata = [ordered]@{
     schema_version = 1
     version_name = $VersionName
     app_release_id = "$ReleaseBatchId-desktop"
+    model_generation = $ModelGeneration
+    dataset_generation = $DatasetGeneration
     api_base_url = $ApiBaseUrl.TrimEnd('/')
     installer = [bool](Test-Path -LiteralPath $installerPath -PathType Leaf)
     code_signed = $RequireCodeSigning.IsPresent

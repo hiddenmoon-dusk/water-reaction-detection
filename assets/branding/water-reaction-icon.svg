@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">水体反应管检测</title>
+  <desc id="desc">青色背景上的白色反应管、荧光黄反应液和检测信号</desc>
+  <rect width="256" height="256" fill="#00A7B5"/>
+
+  <g fill="none" stroke="#D9FF3F" stroke-width="8" stroke-linecap="round">
+    <path d="M63 83C34 107 34 149 63 173"/>
+    <path d="M193 83C222 107 222 149 193 173"/>
+  </g>
+
+  <path d="M94 48h68v17H94z" fill="#FFFFFF"/>
+  <path d="M101 65h54v111c0 16-12 28-27 28s-27-12-27-28V65z" fill="#FFFFFF"/>
+
+  <clipPath id="tube-body">
+    <path d="M101 65h54v111c0 16-12 28-27 28s-27-12-27-28V65z"/>
+  </clipPath>
+  <path d="M101 126h54v50c0 16-12 28-27 28s-27-12-27-28z" fill="#D9FF3F" clip-path="url(#tube-body)"/>
+
+  <g fill="none" stroke="#111111" stroke-width="8" stroke-linecap="round">
+    <path d="M89 111h78"/>
+    <path d="M79 127h98"/>
+  </g>
+  <circle cx="128" cy="119" r="10" fill="#111111"/>
+</svg>

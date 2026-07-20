@@ -10,6 +10,7 @@
 #if OutputDir == ""
   #define OutputDir "F:\\code\\正式发布准备-v1.0.5\\Windows"
 #endif
+#define IconFile GetEnv("WATER_WINDOWS_ICON_FILE")
 
 [Setup]
 AppId={{B2F7E04A-2BCE-4B0C-A4A4-7A2DE1B93D1D}
@@ -26,6 +27,7 @@ PrivilegesRequired=lowest
 Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile={#IconFile}
 Uninstallable=yes
 SetupLogging=yes
 

@@ -1,4 +1,5 @@
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 plugins {
     id 'com.android.application'
@@ -80,9 +81,10 @@ android {
     }
 
     sourceSets {
-        main.assets.srcDir('../../model-contract/generated/current')
         if (formalRelease.get()) {
             main.assets.srcDir(formalAssetsDir)
+        } else {
+            main.assets.srcDir('../../model-contract/generated/current')
         }
     }
 
@@ -113,7 +115,8 @@ tasks.matching { it.name in ['assembleRelease', 'bundleRelease'] }.configureEach
 tasks.register('generateFormalServerConfig') {
     onlyIf { formalRelease.get() }
     def output = file("$formalAssetsDir/server-config.json")
-    outputs.file(output)
+    def modelOutput = file("$formalAssetsDir/model-manifest.json")
+    outputs.files(output, modelOutput)
     doLast {
         def apiBaseUrl = formalApiBaseUrl.get().trim().replaceAll('/+$', '')
         def bootstrapToken = formalBootstrapToken.get().trim()
@@ -127,7 +130,34 @@ tasks.register('generateFormalServerConfig') {
         if (!appReleaseId || !appReleaseId.endsWith('-android')) {
             throw new GradleException('正式 Android 配置的 formalAppReleaseId 必须以 -android 结尾')
         }
+        def releaseBatchId = appReleaseId.substring(0, appReleaseId.length() - '-android'.length())
+        if (!(releaseBatchId ==~ /[0-9a-f]{32}/)) {
+            throw new GradleException('正式 Android 配置的发布批次 ID 必须是 32 位小写十六进制字符串')
+        }
+        def sourceManifest = file('../../model-contract/generated/current/model-manifest.json')
+        def sourceModelDirectory = sourceManifest.parentFile
+        if (!sourceManifest.isFile()) {
+            throw new GradleException("找不到当前模型清单: ${sourceManifest}")
+        }
+        def modelManifest = new JsonSlurper().parse(sourceManifest)
+        modelManifest.schema_version = 1
+        modelManifest.release_batch_id = releaseBatchId
+        modelManifest.app_release_id = appReleaseId
+        modelManifest.model_generation = formalModelGeneration.get()
+        modelManifest.dataset_generation = formalDatasetGeneration.get()
+        modelManifest.app_version_code = providers.gradleProperty('appVersionCode').getOrElse('1').toInteger()
+        modelManifest.app_version_name = providers.gradleProperty('appVersionName').getOrElse('1.0.0')
         formalAssetsDir.mkdirs()
+        ['detector.tflite', 'classifier.tflite'].each { filename ->
+            def sourceModel = file("${sourceModelDirectory}/${filename}")
+            if (!sourceModel.isFile()) {
+                throw new GradleException("找不到正式发布模型文件: ${sourceModel}")
+            }
+            copy {
+                from sourceModel
+                into formalAssetsDir
+            }
+        }
         output.text = JsonOutput.prettyPrint(JsonOutput.toJson([
                 schema_version: 1,
                 api_base_url: apiBaseUrl,
@@ -136,6 +166,7 @@ tasks.register('generateFormalServerConfig') {
                 model_generation: formalModelGeneration.get(),
                 dataset_generation: formalDatasetGeneration.get(),
         ])) + System.lineSeparator()
+        modelOutput.text = JsonOutput.prettyPrint(JsonOutput.toJson(modelManifest)) + System.lineSeparator()
     }
 }
 

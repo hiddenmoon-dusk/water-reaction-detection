@@ -87,6 +87,16 @@ def index():
     return render_template("index.html", statistics=statistics_payload())
 
 
+@bp.get("/privacy")
+def privacy_policy():
+    return render_template("privacy.html")
+
+
+@bp.get("/terms")
+def terms_of_service():
+    return render_template("terms.html")
+
+
 @bp.get("/api/v1/public/statistics")
 def public_statistics():
     return jsonify(statistics_payload())

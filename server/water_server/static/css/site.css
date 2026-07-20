@@ -88,6 +88,13 @@ dt i { display: inline-block; width: 8px; height: 8px; margin-right: 7px; }
 .update-band { display: flex; justify-content: space-between; gap: 24px; padding: 22px 0 80px; color: var(--muted); font-size: 11px; letter-spacing: .09em; }
 .message-page { min-height: 72vh; padding: 110px 0; }
 .message-page p:not(.eyebrow) { max-width: 600px; margin: 28px 0; color: var(--muted); font-size: 18px; line-height: 1.7; }
+.policy-page { max-width: 900px; padding: 86px 0 110px; }
+.policy-page h1 { max-width: none; font-size: clamp(42px, 6vw, 72px); }
+.policy-page h2 { margin: 48px 0 12px; font-size: 26px; }
+.policy-page p, .policy-page li { color: var(--muted); line-height: 1.8; }
+.policy-page ul { padding-left: 1.3em; }
+.policy-page .policy-meta { display: flex; flex-wrap: wrap; gap: 12px 28px; margin: 26px 0 48px; color: var(--cyan); font-size: 12px; letter-spacing: .06em; }
+.policy-page .notice { padding: 18px 20px; border-left: 5px solid var(--chartreuse); background: var(--cyan-soft); color: var(--ink); }
 .admin-login, .admin-heading { padding: 100px 0 70px; }
 .admin-login form { display: grid; gap: 14px; max-width: 470px; margin-top: 42px; }
 input[type="password"], input[type="file"] {

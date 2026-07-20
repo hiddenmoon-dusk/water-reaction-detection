@@ -92,6 +92,22 @@ def test_homepage_contains_three_charts_and_download_controls(client):
     assert "管理员登录" in html
 
 
+def test_public_policy_pages_show_release_contact_and_data_rules(client):
+    privacy = client.get("/privacy")
+    terms = client.get("/terms")
+    homepage = client.get("/").get_data(as_text=True)
+
+    assert privacy.status_code == 200
+    assert "用户隐私政策" in privacy.get_data(as_text=True)
+    assert "通常仅在服务器保存一天" in privacy.get_data(as_text=True)
+    assert "sunx77@mail2.sysu.edu.cn" in privacy.get_data(as_text=True)
+    assert "上传前确认照片中不含个人隐私" in privacy.get_data(as_text=True)
+    assert terms.status_code == 200
+    assert "用户协议" in terms.get_data(as_text=True)
+    assert "/privacy" in homepage
+    assert "/terms" in homepage
+
+
 def test_desktop_download_can_be_offloaded_to_nginx(
     app, client, tmp_path
 ):

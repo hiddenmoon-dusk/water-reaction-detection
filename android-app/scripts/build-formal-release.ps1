@@ -6,7 +6,9 @@ param(
     [string]$ModelDirectory = '',
     [string]$ApiBaseUrl = '',
     [string]$BootstrapToken = '',
-    [string]$ReleaseBatchId = ''
+    [string]$ReleaseBatchId = '',
+    [int]$ModelGeneration = 0,
+    [int]$DatasetGeneration = 0
 )
 
 $ErrorActionPreference = 'Stop'
@@ -55,10 +57,12 @@ foreach ($required in @('detector.tflite', 'classifier.tflite', 'model-manifest.
     }
 }
 $manifest = Get-Content -Raw -LiteralPath $manifestPath | ConvertFrom-Json
-$modelGeneration = [int]$manifest.model_generation
-$datasetGeneration = [int]$manifest.dataset_generation
-if ($modelGeneration -le 0 -or $datasetGeneration -le 0) {
-    throw '模型清单中的 model_generation/dataset_generation 必须大于 0'
+$manifestModelGeneration = [int]$manifest.model_generation
+$manifestDatasetGeneration = [int]$manifest.dataset_generation
+if ($ModelGeneration -le 0) { $ModelGeneration = $manifestModelGeneration }
+if ($DatasetGeneration -le 0) { $DatasetGeneration = $manifestDatasetGeneration }
+if ($ModelGeneration -le 0 -or $DatasetGeneration -le 0) {
+    throw '正式发布的 model_generation/dataset_generation 必须大于 0'
 }
 
 $javaHome = $env:JAVA_HOME
@@ -78,8 +82,8 @@ $gradleArgs = @(
     'assembleRelease',
     '-PformalRelease=true',
     "-PformalAppReleaseId=$ReleaseBatchId-android",
-    "-PformalModelGeneration=$modelGeneration",
-    "-PformalDatasetGeneration=$datasetGeneration",
+    "-PformalModelGeneration=$ModelGeneration",
+    "-PformalDatasetGeneration=$DatasetGeneration",
     "-PappVersionCode=$VersionCode",
     "-PappVersionName=$VersionName"
 )
@@ -108,8 +112,8 @@ $metadata = [ordered]@{
     version_code = $VersionCode
     application_id = 'org.hiddenmoon.waterreaction'
     app_release_id = "$ReleaseBatchId-android"
-    model_generation = $modelGeneration
-    dataset_generation = $datasetGeneration
+    model_generation = $ModelGeneration
+    dataset_generation = $DatasetGeneration
     api_base_url = $ApiBaseUrl.TrimEnd('/')
     signing_configuration = 'android-app/release-signing.properties'
 }
