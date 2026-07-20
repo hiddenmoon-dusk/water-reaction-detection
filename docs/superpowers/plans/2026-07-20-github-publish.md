@@ -69,10 +69,10 @@ Get-FileHash <asset> -Algorithm SHA256
 **Files:**
 - Repository: `hiddenmoon-dusk/water-reaction-detection`
 
-- [ ] **Step 1: 验证远程提交树**
+- [x] **Step 1: 验证远程提交树**
 
 通过 GitHub API 回读 `main` 的提交和关键文件，确认 README、中文说明、Android 工程、模型工具、服务器源码和测试均存在。
 
-- [ ] **Step 2: 验证 Release 资产**
+- [x] **Step 2: 验证 Release 资产**
 
 回读 Release 的资产名称、文件大小和下载地址，并核对本地 SHA-256 清单。
