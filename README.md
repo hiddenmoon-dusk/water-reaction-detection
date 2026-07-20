@@ -14,9 +14,9 @@
 
 请打开仓库的 GitHub Releases 页面下载对应资产：
 
-- Windows 完整包：`水体反应管检测系统-v1.0.4-win64.zip`
-- Windows 主程序：`水体反应管检测系统-v1.0.4.exe`（仅主程序文件，推荐下载完整包）
-- Android 安装包：`水体反应管检测-v1.0.4.apk`
+- Windows 完整包：`water-detection-desktop-v1.0.4-win64.zip`
+- Windows 主程序：`water-detection-desktop-v1.0.4.exe`（仅主程序文件，推荐下载完整包）
+- Android 安装包：`water-reaction-android-v1.0.4.apk`
 - 校验文件：`SHA256SUMS.txt`
 
 Windows 完整包内包含 EXE、模型文件和 `release.json`，请保持目录结构，不要只把 EXE 从目录中单独取出运行。Android 安装包只适用于 Android 14/API 34 及以上设备。
