@@ -4,7 +4,8 @@
 
 - Windows 解压目录：`dist/水体反应管检测系统`
 - 用户下载 ZIP：`output/water-detection-desktop.zip`
-- 线上地址：`https://hiddenmoon.duckdns.org`
+- 线上地址：由服务器的 `WATER_PUBLIC_BASE_URL` 配置，示例使用
+  `https://your-domain.example`
 - 服务器程序：`/opt/water-detection/app`
 - 数据库：`/opt/water-detection/instance/app.db`
 - 检测结果：`/opt/water-detection/storage/results`
@@ -64,11 +65,22 @@ sudo tail -f /opt/water-detection/logs/access.log
 sudo journalctl -u water-detection -f
 ```
 
-公开统计健康检查：
+公开统计健康检查（将域名替换为生产值）：
 
 ```bash
-curl -fsS https://hiddenmoon.duckdns.org/api/v1/public/statistics
+curl -fsS https://your-domain.example/api/v1/public/statistics
 ```
+
+正式首次部署必须先在服务器本机设置 `WATER_PUBLIC_DOMAIN`、
+`WATER_CERTBOT_EMAIL`、`WATER_ADMIN_INITIAL_PASSWORD` 和
+`WATER_BOOTSTRAP_TOKEN`，再执行：
+
+```bash
+sudo -E bash server/deploy/bootstrap.sh /path/to/project/server
+```
+
+脚本会拒绝缺少生产密钥、HTTP 公网地址、弱管理员密码和非安全域名，
+不会在 HTTPS 申请失败时继续以 HTTP 作为正式服务。
 
 证书自动续期检查：
 

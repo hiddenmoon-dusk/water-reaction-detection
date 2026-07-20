@@ -1,10 +1,55 @@
+import groovy.json.JsonOutput
+
 plugins {
     id 'com.android.application'
 }
 
+def releaseSigningFile = rootProject.file('release-signing.properties')
+def releaseSigningProperties = new Properties()
+if (releaseSigningFile.isFile()) {
+    releaseSigningFile.withInputStream { releaseSigningProperties.load(it) }
+}
+def requiredSigningProperties = [
+    'storeFile',
+    'storePassword',
+    'keyAlias',
+    'keyPassword',
+]
+def missingSigningProperties = requiredSigningProperties.findAll {
+    !releaseSigningProperties.getProperty(it)?.trim()
+}
+def formalRelease = providers.gradleProperty('formalRelease')
+        .map { it.toBoolean() }
+        .orElse(false)
+def formalApiBaseUrl = providers.gradleProperty('formalApiBaseUrl')
+        .orElse(providers.environmentVariable('WATER_PUBLIC_BASE_URL'))
+        .orElse('https://example.invalid')
+def formalBootstrapToken = providers.gradleProperty('formalBootstrapToken')
+        .orElse(providers.environmentVariable('WATER_BOOTSTRAP_TOKEN'))
+        .orElse('')
+def formalAppReleaseId = providers.gradleProperty('formalAppReleaseId').orElse('')
+def formalModelGeneration = providers.gradleProperty('formalModelGeneration')
+        .map { it.toInteger() }
+        .orElse(1)
+def formalDatasetGeneration = providers.gradleProperty('formalDatasetGeneration')
+        .map { it.toInteger() }
+        .orElse(1)
+def formalAssetsDir = file("$buildDir/generated/formal-assets")
+
 android {
     namespace 'org.hiddenmoon.waterreaction'
     compileSdk 36
+
+    signingConfigs {
+        release {
+            if (missingSigningProperties.isEmpty()) {
+                storeFile rootProject.file(releaseSigningProperties.getProperty('storeFile'))
+                storePassword releaseSigningProperties.getProperty('storePassword')
+                keyAlias releaseSigningProperties.getProperty('keyAlias')
+                keyPassword releaseSigningProperties.getProperty('keyPassword')
+            }
+        }
+    }
 
     buildFeatures {
         buildConfig true
@@ -22,6 +67,9 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            if (missingSigningProperties.isEmpty()) {
+                signingConfig signingConfigs.release
+            }
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -33,11 +81,66 @@ android {
 
     sourceSets {
         main.assets.srcDir('../../model-contract/generated/current')
+        if (formalRelease.get()) {
+            main.assets.srcDir(formalAssetsDir)
+        }
     }
 
     androidResources {
         noCompress += 'tflite'
     }
+}
+
+tasks.register('checkReleaseSigning') {
+    doLast {
+        if (!missingSigningProperties.isEmpty()) {
+            throw new GradleException(
+                    "正式 Release 缺少签名配置 ${releaseSigningFile}; " +
+                            "请复制 release-signing.properties.example 并在仓库外填写全部字段"
+            )
+        }
+        def keyStore = rootProject.file(releaseSigningProperties.getProperty('storeFile'))
+        if (!keyStore.isFile()) {
+            throw new GradleException("正式 Release 找不到签名 keystore: ${keyStore}")
+        }
+    }
+}
+
+tasks.matching { it.name in ['assembleRelease', 'bundleRelease'] }.configureEach {
+    dependsOn tasks.named('checkReleaseSigning')
+}
+
+tasks.register('generateFormalServerConfig') {
+    onlyIf { formalRelease.get() }
+    def output = file("$formalAssetsDir/server-config.json")
+    outputs.file(output)
+    doLast {
+        def apiBaseUrl = formalApiBaseUrl.get().trim().replaceAll('/+$', '')
+        def bootstrapToken = formalBootstrapToken.get().trim()
+        def appReleaseId = formalAppReleaseId.get().trim()
+        if (!apiBaseUrl.startsWith('https://')) {
+            throw new GradleException('正式 Android 配置必须使用 HTTPS 的 formalApiBaseUrl')
+        }
+        if (bootstrapToken.length() < 16) {
+            throw new GradleException('正式 Android 配置的 bootstrap token 至少需要 16 个字符')
+        }
+        if (!appReleaseId || !appReleaseId.endsWith('-android')) {
+            throw new GradleException('正式 Android 配置的 formalAppReleaseId 必须以 -android 结尾')
+        }
+        formalAssetsDir.mkdirs()
+        output.text = JsonOutput.prettyPrint(JsonOutput.toJson([
+                schema_version: 1,
+                api_base_url: apiBaseUrl,
+                bootstrap_token: bootstrapToken,
+                app_release_id: appReleaseId,
+                model_generation: formalModelGeneration.get(),
+                dataset_generation: formalDatasetGeneration.get(),
+        ])) + System.lineSeparator()
+    }
+}
+
+tasks.matching { it.name == 'preBuild' }.configureEach {
+    dependsOn tasks.named('generateFormalServerConfig')
 }
 
 dependencies {

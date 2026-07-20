@@ -44,7 +44,7 @@ def test_load_release_returns_validated_values(tmp_path):
                 "app_release_id": "initial",
                 "model_generation": 1,
                 "dataset_generation": 1,
-                "api_base_url": "https://hiddenmoon.duckdns.org",
+                "api_base_url": "https://water.example.test",
                 "bootstrap_token": "bootstrap-v1",
             }
         ),
@@ -55,7 +55,7 @@ def test_load_release_returns_validated_values(tmp_path):
 
     assert release.app_release_id == "initial"
     assert release.model_generation == 1
-    assert release.api_base_url == "https://hiddenmoon.duckdns.org"
+    assert release.api_base_url == "https://water.example.test"
 
 
 def test_result_root_falls_back_to_documents_when_runtime_is_not_writable(

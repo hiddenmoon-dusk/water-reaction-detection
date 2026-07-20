@@ -49,7 +49,8 @@ def test_nginx_limits_uploads_and_proxies():
     )
     assert "proxy_set_header X-Forwarded-Proto $scheme;" in bundle
     assert "proxy_pass http://127.0.0.1:8000;" in bundle
-    assert "server_name hiddenmoon.duckdns.org;" in text
+    assert "server_name __WATER_PUBLIC_DOMAIN__;" in text
+    assert 'add_header X-Content-Type-Options "nosniff" always;' in text
 
 
 def test_backup_uses_sqlite_online_backup():
@@ -68,4 +69,11 @@ def test_bootstrap_reloads_nginx_after_installing_site():
     assert "systemctl reload nginx" in text
     assert "certbot" in text
     assert "--nginx" in text
+    assert "WATER_PUBLIC_DOMAIN" in text
+    assert "WATER_CERTBOT_EMAIL" in text
+    assert "--email" in text
     assert "--reinstall" in text
+    assert "WATER_ADMIN_INITIAL_PASSWORD" in text
+    assert "WATER_BOOTSTRAP_TOKEN" in text
+    assert "WATER_PRODUCTION=true" in text
+    assert "HTTP remains available" not in text

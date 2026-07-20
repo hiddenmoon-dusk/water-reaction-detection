@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "app_release_id": "initial",
+  "app_release_id": "development-desktop",
   "model_generation": 1,
   "dataset_generation": 1,
-  "api_base_url": "https://hiddenmoon.duckdns.org",
-  "bootstrap_token": "water-reaction-bootstrap-v1"
+  "api_base_url": "https://example.invalid",
+  "bootstrap_token": "configure-formal-build"
 }

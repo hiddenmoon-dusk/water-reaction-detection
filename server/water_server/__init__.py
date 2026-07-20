@@ -4,7 +4,7 @@ from pathlib import Path
 
 from flask import Flask
 
-from .config import default_config
+from .config import default_config, validate_production_config
 from .db import close_db, initialize_database
 
 
@@ -13,6 +13,7 @@ def create_app(test_config: dict | None = None) -> Flask:
     app.config.from_mapping(default_config(app.instance_path))
     if test_config:
         app.config.update(test_config)
+    validate_production_config(app.config)
 
     Path(app.config["DATABASE"]).parent.mkdir(parents=True, exist_ok=True)
     storage = Path(app.config["STORAGE_ROOT"])

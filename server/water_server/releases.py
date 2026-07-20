@@ -115,7 +115,7 @@ def publish_desktop_release(
                 "app_version_name": f"legacy-{reservation.model_generation}",
                 "api_base_url": current_app.config.get(
                     "PUBLIC_BASE_URL",
-                    "https://hiddenmoon.duckdns.org",
+                    "https://example.invalid",
                 ),
                 "bootstrap_token": current_app.config["BOOTSTRAP_TOKEN"],
             }

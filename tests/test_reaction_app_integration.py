@@ -37,7 +37,7 @@ def release():
         app_release_id="initial",
         model_generation=1,
         dataset_generation=1,
-        api_base_url="https://hiddenmoon.duckdns.org",
+        api_base_url="https://water.example.test",
         bootstrap_token="test",
     )
 

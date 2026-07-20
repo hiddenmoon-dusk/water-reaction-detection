@@ -147,7 +147,7 @@ def test_mobile_release_metadata_and_download_use_published_immutable_apk(
         "size_bytes": len(expected_bytes),
         "sha256": expected_sha256,
         "download_url": (
-            f"https://hiddenmoon.duckdns.org/downloads/mobile/"
+            f"https://example.invalid/downloads/mobile/"
             f"{reserved.android_release_id}.apk"
         ),
         "mandatory": False,

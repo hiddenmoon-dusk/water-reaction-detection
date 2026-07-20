@@ -1,0 +1,6 @@
+# 复制为 android-app/release-signing.properties，并只在仓库外填写真实值。
+# storeFile 可以是绝对路径，也可以是相对于 android-app/ 的路径。
+storeFile=F:/secure/water-reaction-release.jks
+storePassword=enter-in-local-terminal
+keyAlias=water-reaction-release
+keyPassword=enter-in-local-terminal

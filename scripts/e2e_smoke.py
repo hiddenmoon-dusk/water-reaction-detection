@@ -206,7 +206,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--base-url",
-        default="https://hiddenmoon.duckdns.org",
+        default="https://example.invalid",
+        help="生产环境必须显式提供 --base-url；默认值只用于防止误连真实服务器",
     )
     parser.add_argument(
         "--release-json",

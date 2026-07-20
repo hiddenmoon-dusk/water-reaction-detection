@@ -12,10 +12,19 @@ EnvironmentFile=/opt/water-detection/instance/secrets.env
 ExecStart=/opt/water-detection/venv/bin/gunicorn --workers 1 --threads 2 --timeout 1800 --bind 127.0.0.1:8000 --access-logfile /opt/water-detection/logs/access.log --error-logfile /opt/water-detection/logs/error.log wsgi:app
 Restart=always
 RestartSec=5
+UMask=027
 PrivateTmp=true
+PrivateDevices=true
 NoNewPrivileges=true
 ProtectSystem=strict
 ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+LockPersonality=true
+SystemCallArchitectures=native
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
 ReadWritePaths=/opt/water-detection/instance /opt/water-detection/storage /opt/water-detection/logs
 
 [Install]

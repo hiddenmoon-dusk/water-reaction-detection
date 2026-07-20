@@ -10,6 +10,13 @@
 - 服务器提供客户端注册、结果接收、统计展示、结果导出和桌面端/Android 发布管理。
 - `models/` 中保留训练和桌面端使用的模型；Android APK 中包含转换后的 TFLite 模型。
 
+## 正式发布准备
+
+正式发布流程见 [`docs/正式发布指南.md`](docs/正式发布指南.md)。Android Release
+必须使用仓库外的正式 keystore；Windows 正式版应使用 Inno Setup 安装包和
+Authenticode 签名；服务器生产模式必须配置 HTTPS 和独立密钥。当前 v1.0.4
+APK 使用 Debug 证书，只能用于验证，不应直接上架。
+
 ## 获取可运行程序
 
 请打开仓库的 GitHub Releases 页面下载对应资产：
@@ -71,19 +78,37 @@ cd android-app
 .\gradlew.bat --no-daemon assembleDebug
 ```
 
+正式构建前请复制 `android-app/release-signing.properties.example` 为仓库外的
+`android-app/release-signing.properties`，在本机填写正式签名信息，再设置服务器
+环境变量并执行：
+
+```powershell
+$env:WATER_PUBLIC_BASE_URL = 'https://your-domain.example'
+$env:WATER_BOOTSTRAP_TOKEN = '在本机输入的发布 Token'
+.\scripts\build-formal-release.ps1
+```
+
+缺少签名配置时 `assembleRelease`/`bundleRelease` 会失败，不会退回 Debug 签名。
+
+Windows 安装包使用 `scripts/build-windows-formal-release.ps1` 和
+`packaging/windows/water-detection.iss` 生成；面向公众发布时还需要代码签名证书。
+
 模型转换、样本一致性检查和 APK 生成流程请参考 `android-app/一键更新模型并生成APK.bat` 及 `model-tools/`。
 
 ## 服务器部署
 
-服务器代码位于 `server/`，部署脚本位于 `server/deploy/`。首次部署前必须通过环境变量提供管理员初始密码，不能把密码写入脚本或提交到 Git：
+服务器代码位于 `server/`，部署脚本位于 `server/deploy/`。首次部署前必须通过环境变量提供生产域名、证书邮箱、管理员初始密码和 Token，不能把密码写入脚本或提交到 Git：
 
 ```bash
-export WATER_ADMIN_INITIAL_PASSWORD='请替换为长度至少 12 位的强密码'
-export WATER_BOOTSTRAP_TOKEN='与发布包配置一致的 bootstrap token'
-sudo bash server/deploy/bootstrap.sh /path/to/project/server
+export WATER_PUBLIC_DOMAIN='your-domain.example'
+export WATER_CERTBOT_EMAIL='release-owner@example.com'
+export WATER_PRODUCTION=true
+export WATER_ADMIN_INITIAL_PASSWORD='请在本机输入长度至少 12 位的强密码'
+export WATER_BOOTSTRAP_TOKEN='请在本机输入与发布包一致的 Token'
+sudo -E bash server/deploy/bootstrap.sh /path/to/project/server
 ```
 
-生产环境请使用 HTTPS、独立的服务器密钥和受限的 `secrets.env` 文件。数据库、检测结果、上传文件、签名私钥和密码文件均不属于 Git 仓库内容。
+部署脚本会自动生成 Secret Key，强制 HTTPS，并在证书申请失败时停止部署。正式 Android 发布后，还应把 APK 证书 SHA-256 配置到 `WATER_ANDROID_SIGNING_CERT_SHA256`。数据库、检测结果、上传文件、签名私钥和密码文件均不属于 Git 仓库内容。
 
 ## 目录说明
 
@@ -94,10 +119,12 @@ android-app/          Android 客户端源码
 models/               检测模型和分类模型
 model-tools/          模型转换与一致性校验工具
 server/               Flask 发布与结果同步服务
+packaging/windows/    Inno Setup 安装包模板
 scripts/              训练、标注、构建和端到端检查脚本
 tests/                Windows 客户端测试
 server/tests/         服务器测试
 docs/中文使用说明.md  面向使用者的中文说明
+docs/正式发布指南.md  正式构建、签名和服务器上线说明
 ```
 
 ## 安全与发布说明
