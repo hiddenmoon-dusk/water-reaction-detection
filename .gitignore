@@ -1,0 +1,85 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+model-tools/.work/
+model-tools/.pytest_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# Runtime data, user samples, training data and generated results
+CNN_Dataset/
+Dataset/
+测试用/
+结果/
+output/
+runs/
+发布/
+服务器/
+*.download
+model-contract/generated/
+server/data/
+server/uploads/
+*.db
+*.sqlite
+*.sqlite3
+
+# Existing and future build outputs
+build/
+dist/
+*.egg-info/
+*.log
+*.tflite
+
+# Android / Gradle local state
+.gradle/
+**/.gradle/
+**/build/
+local.properties
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Local SDK/tool caches created by the publisher
+tools/android-sdk/
+tools/gradle/
+tools/cache/
+
+# Signing secrets and local release credentials
+*.jks
+*.keystore
+keystore.properties
+signing.properties
+*.p12
+*.pfx
+*.pem
+*.key
+.env
+.env.*
+
+# Installer and packaged artifacts
+*.apk
+*.aab
+*.zip
+*.exe
+*.msi
+
+# Local worktrees and editor/OS noise
+.worktrees/
+worktrees/
+.publish-water-reaction-detection-*/
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+android-app/.gradle/
+android-app/app/build/
+android-app/build/
+android-app/local.properties
+android-app/keystore.properties
+*.jks
+*.keystore

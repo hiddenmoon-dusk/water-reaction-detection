@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="message-page">
+  <p class="eyebrow">SYSTEM NOTICE</p>
+  <h1>{{ title }}</h1>
+  <p>{{ message }}</p>
+  <a class="text-button" href="{{ url_for('public.index') }}">返回统计主页</a>
+</section>
+{% endblock %}

@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>{% block title %}水体反应管检测系统{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/site.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="orbit orbit-a" aria-hidden="true"></div>
+  <div class="orbit orbit-b" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="{{ url_for('public.index') }}">
+      <span class="brand-mark"></span>
+      <span>
+        <strong>水体反应管检测系统</strong>
+        <small>WATER REACTION LAB / ORBITAL NODE</small>
+      </span>
+    </a>
+    <a class="text-button compact" href="/admin">管理员登录</a>
+  </header>
+  <main>{% block content %}{% endblock %}</main>
+  <footer>
+    <span>PUBLIC AGGREGATE DATA ONLY</span>
+    <span>不公开单次检测明细与图片</span>
+  </footer>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

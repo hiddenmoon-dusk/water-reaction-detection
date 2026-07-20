@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}管理员登录{% endblock %}
+{% block content %}
+<section class="admin-login">
+  <p class="eyebrow">RESTRICTED OPERATIONS NODE</p>
+  <h1>管理员登录</h1>
+  <form method="post">
+    <label for="password">管理员密码</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+    {% if error %}<p class="form-error">{{ error }}</p>{% endif %}
+    <button class="text-button" type="submit">进入控制台</button>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+[Unit]
+Description=Water Detection Flask Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=waterapp
+Group=waterapp
+WorkingDirectory=/opt/water-detection/app
+EnvironmentFile=/opt/water-detection/instance/secrets.env
+ExecStart=/opt/water-detection/venv/bin/gunicorn --workers 1 --threads 2 --timeout 1800 --bind 127.0.0.1:8000 --access-logfile /opt/water-detection/logs/access.log --error-logfile /opt/water-detection/logs/error.log wsgi:app
+Restart=always
+RestartSec=5
+PrivateTmp=true
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/water-detection/instance /opt/water-detection/storage /opt/water-detection/logs
+
+[Install]
+WantedBy=multi-user.target

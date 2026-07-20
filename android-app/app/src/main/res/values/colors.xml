@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="archive_ink">#111111</color>
+    <color name="archive_paper">#FFFFFF</color>
+    <color name="archive_mist">#F2F2EE</color>
+    <color name="archive_grid">#E1E3DE</color>
+    <color name="archive_signal_yellow">#D9FF3F</color>
+    <color name="archive_signal_cyan">#00A7B5</color>
+    <color name="archive_signal_red">#C4423B</color>
+</resources>

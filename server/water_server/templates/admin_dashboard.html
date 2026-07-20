@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}管理员控制台{% endblock %}
+{% block content %}
+<section class="admin-heading">
+  <p class="eyebrow">RESTRICTED OPERATIONS NODE</p>
+  <h1>管理员控制台</h1>
+  <div class="admin-metrics">
+    <span>数据代次 <strong>{{ state.dataset_generation }}</strong></span>
+    <span>模型代次 <strong>{{ state.model_generation }}</strong></span>
+    <span>检测批次 <strong>{{ upload_count }}</strong></span>
+    <span>占用空间 <strong>{{ "%.2f"|format(storage_bytes / 1048576) }} MB</strong></span>
+  </div>
+</section>
+
+<section class="admin-grid">
+  <article>
+    <span class="panel-index">01 / EXPORT</span>
+    <h2>下载检测结果</h2>
+    <p>按污水、生活用水和养殖水体分组导出完整三件套。</p>
+    <a class="text-button" href="{{ url_for('admin.download_results') }}">生成并下载 ZIP</a>
+  </article>
+  <article>
+    <span class="panel-index">02 / DESKTOP RELEASE</span>
+    <h2>上传新的电脑程序版本</h2>
+    <p>ZIP 必须包含 EXE、reaction_classifier.h5 和 yolov8n.pt。</p>
+    <form method="post" action="{{ url_for('admin.upload_desktop_release') }}" enctype="multipart/form-data">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input name="file" type="file" accept=".zip" required>
+      <button class="text-button" type="submit">验证并发布</button>
+    </form>
+  </article>
+  <article>
+    <span class="panel-index">03 / MOBILE RELEASE</span>
+    <h2>上传新的手机程序版本</h2>
+    <p>功能筹备中。</p>
+    <button class="text-button" type="button" disabled>暂不可用</button>
+  </article>
+  <article class="danger-panel">
+    <span class="panel-index">04 / CLEAR DATA</span>
+    <h2>清除检测结果</h2>
+    <p>删除全部检测文件并提升数据代次，旧客户端队列不会重新上传。</p>
+    <form method="post" action="{{ url_for('admin.clear_all_results') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input name="password" type="password" placeholder="再次输入管理员密码" required>
+      <button class="text-button" type="submit">确认清除</button>
+    </form>
+  </article>
+</section>
+
+<section class="password-panel">
+  <h2>修改管理员密码</h2>
+  <form method="post" action="{{ url_for('admin.change_password') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input name="current_password" type="password" placeholder="当前密码" required>
+    <input name="new_password" type="password" minlength="12" placeholder="新密码，至少 12 位" required>
+    <button class="text-button" type="submit">修改密码</button>
+  </form>
+</section>
+{% endblock %}

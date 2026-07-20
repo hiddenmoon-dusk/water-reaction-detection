@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://water.local/schemas/model-manifest.schema.json",
+  "$comment": "Standard JSON Schema cannot express app_release_id == release_batch_id + '-android'; water_models.contracts.validate_manifest_payload enforces this runtime rule.",
+  "x-cross-field-constraints": [
+    "app_release_id == release_batch_id + '-android'"
+  ],
+  "title": "Android Model Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "release_batch_id",
+    "app_release_id",
+    "app_version_code",
+    "app_version_name",
+    "model_generation",
+    "dataset_generation",
+    "detector_sha256",
+    "classifier_sha256",
+    "detector_source_sha256",
+    "classifier_source_sha256",
+    "detector_input",
+    "detector_output",
+    "classifier_input",
+    "classifier_output",
+    "detector_confidence",
+    "classifier_threshold",
+    "nms_iou",
+    "class_names",
+    "conversion"
+  ],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "release_batch_id": {"type": "string", "pattern": "^[0-9a-f]{32}$"},
+    "app_release_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}-android$"
+    },
+    "app_version_code": {"type": "integer", "minimum": 1},
+    "app_version_name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "\\S"
+    },
+    "model_generation": {"type": "integer", "minimum": 1},
+    "dataset_generation": {"type": "integer", "minimum": 1},
+    "detector_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "classifier_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "detector_source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "classifier_source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "detector_input": {
+      "$ref": "#/$defs/tensorSpec",
+      "properties": {
+        "shape": {"const": [1, 640, 640, 3]}
+      }
+    },
+    "detector_output": {
+      "$ref": "#/$defs/tensorSpec",
+      "properties": {
+        "shape": {
+          "type": "array",
+          "prefixItems": [
+            {"const": 1},
+            {"const": 5},
+            {"type": "integer", "minimum": 1}
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        }
+      }
+    },
+    "classifier_input": {
+      "$ref": "#/$defs/tensorSpec",
+      "properties": {
+        "shape": {"const": [1, 128, 128, 3]}
+      }
+    },
+    "classifier_output": {
+      "$ref": "#/$defs/tensorSpec",
+      "properties": {
+        "shape": {"const": [1, 1]}
+      }
+    },
+    "detector_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "classifier_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+    "nms_iou": {"type": "number", "minimum": 0, "maximum": 1},
+    "class_names": {"const": ["lib"]},
+    "conversion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["precision", "ultralytics", "tensorflow"],
+      "properties": {
+        "precision": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "ultralytics": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "tensorflow": {"type": "string", "minLength": 1, "pattern": "\\S"}
+      }
+    }
+  },
+  "$defs": {
+    "tensorSpec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "shape", "dtype"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1, "pattern": "\\S"},
+        "shape": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "integer", "minimum": 1}
+        },
+        "dtype": {
+          "type": "string",
+          "enum": ["float32", "float16", "uint8", "int8"]
+        }
+      }
+    }
+  }
+}

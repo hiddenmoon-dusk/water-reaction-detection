@@ -1,0 +1,201 @@
+{
+  "bundle": {
+    "app_release_id": "00000000000000000000000000000000-android",
+    "batch_id": "00000000000000000000000000000000",
+    "classifier_sha256": "9f5812576c16c27589f0cabfc8a61981132ac6509e63247c27181dc4de68f331",
+    "classifier_source_sha256": "17b78726d750a37a96b2149b2ac5c4dacf5db2ffe9002ce4aa63647f914497bb",
+    "classifier_threshold": 0.5,
+    "dataset_generation": 1,
+    "detector_confidence": 0.3,
+    "detector_sha256": "7518a41c1218e36441948613e2889dcb7907631d92c08d9b41c76e82672491b9",
+    "detector_source_sha256": "ce93799749fe786b128e752b684cdc4357af33a3ea9c0e7c0a999135505f70bb",
+    "model_generation": 1,
+    "nms_iou": 0.45,
+    "version_code": 1,
+    "version_name": "1.0.0"
+  },
+  "decision": {
+    "behavior_warning": false,
+    "can_override": false,
+    "hard_fail": true,
+    "operator_reason": null,
+    "overridden": false,
+    "reasons": [
+      "strong conversion parity failed"
+    ],
+    "requires_confirmation": false
+  },
+  "report": {
+    "all_expected_detections_disappeared": false,
+    "behavior": {
+      "all_detections_disappeared": false,
+      "count_change_ratio": 0.0,
+      "count_change_unbounded": false,
+      "label_change_ratio": 0.0,
+      "new_count": 8,
+      "old_count": 8,
+      "warning": false
+    },
+    "conversion_passed": false,
+    "images": [
+      {
+        "conversion_passed": false,
+        "label_mismatch_count": 0,
+        "matches": [
+          {
+            "confidence_delta": 0.2554497122764587,
+            "iou": 0.9521110811785829,
+            "label_equal": true,
+            "mobile_index": 0,
+            "probability_delta": 0.1285115480422973,
+            "reference_index": 0
+          }
+        ],
+        "max_confidence_delta": 0.2554497122764587,
+        "max_probability_delta": 0.1285115480422973,
+        "min_match_iou": 0.9521110811785829,
+        "mobile_count": 1,
+        "reference_count": 1,
+        "sample_id": "1.jpg",
+        "unmatched_mobile_indexes": [],
+        "unmatched_reference_indexes": []
+      },
+      {
+        "conversion_passed": false,
+        "label_mismatch_count": 0,
+        "matches": [
+          {
+            "confidence_delta": 0.1265394091606141,
+            "iou": 0.964086373186418,
+            "label_equal": true,
+            "mobile_index": 0,
+            "probability_delta": 5.96046448e-08,
+            "reference_index": 0
+          }
+        ],
+        "max_confidence_delta": 0.1265394091606141,
+        "max_probability_delta": 5.96046448e-08,
+        "min_match_iou": 0.964086373186418,
+        "mobile_count": 1,
+        "reference_count": 1,
+        "sample_id": "test1.jpg",
+        "unmatched_mobile_indexes": [],
+        "unmatched_reference_indexes": []
+      },
+      {
+        "conversion_passed": true,
+        "label_mismatch_count": 0,
+        "matches": [
+          {
+            "confidence_delta": 0.0086880922317505,
+            "iou": 0.9912074763231166,
+            "label_equal": true,
+            "mobile_index": 0,
+            "probability_delta": 0.00020959973335266,
+            "reference_index": 0
+          }
+        ],
+        "max_confidence_delta": 0.0086880922317505,
+        "max_probability_delta": 0.00020959973335266,
+        "min_match_iou": 0.9912074763231166,
+        "mobile_count": 1,
+        "reference_count": 1,
+        "sample_id": "test2.jpg",
+        "unmatched_mobile_indexes": [],
+        "unmatched_reference_indexes": []
+      },
+      {
+        "conversion_passed": false,
+        "label_mismatch_count": 0,
+        "matches": [
+          {
+            "confidence_delta": 0.13269093632698056,
+            "iou": 0.9706615708120958,
+            "label_equal": true,
+            "mobile_index": 0,
+            "probability_delta": 0.0,
+            "reference_index": 0
+          },
+          {
+            "confidence_delta": 0.11642220616340637,
+            "iou": 0.9481969930430355,
+            "label_equal": true,
+            "mobile_index": 1,
+            "probability_delta": 0.0,
+            "reference_index": 2
+          }
+        ],
+        "max_confidence_delta": 0.13269093632698056,
+        "max_probability_delta": 0.0,
+        "min_match_iou": 0.9481969930430355,
+        "mobile_count": 2,
+        "reference_count": 4,
+        "sample_id": "test3-1.jpg",
+        "unmatched_mobile_indexes": [],
+        "unmatched_reference_indexes": [
+          1,
+          3
+        ]
+      },
+      {
+        "conversion_passed": false,
+        "label_mismatch_count": 0,
+        "matches": [],
+        "max_confidence_delta": null,
+        "max_probability_delta": null,
+        "min_match_iou": null,
+        "mobile_count": 1,
+        "reference_count": 0,
+        "sample_id": "test3.jpg",
+        "unmatched_mobile_indexes": [
+          0
+        ],
+        "unmatched_reference_indexes": []
+      },
+      {
+        "conversion_passed": false,
+        "label_mismatch_count": 0,
+        "matches": [],
+        "max_confidence_delta": null,
+        "max_probability_delta": null,
+        "min_match_iou": null,
+        "mobile_count": 1,
+        "reference_count": 0,
+        "sample_id": "微信图片_20260402152114_336_41.jpg",
+        "unmatched_mobile_indexes": [
+          0
+        ],
+        "unmatched_reference_indexes": []
+      },
+      {
+        "conversion_passed": false,
+        "label_mismatch_count": 0,
+        "matches": [
+          {
+            "confidence_delta": 0.109468936920166,
+            "iou": 0.9149061572701401,
+            "label_equal": true,
+            "mobile_index": 0,
+            "probability_delta": 0.0,
+            "reference_index": 0
+          }
+        ],
+        "max_confidence_delta": 0.109468936920166,
+        "max_probability_delta": 0.0,
+        "min_match_iou": 0.9149061572701401,
+        "mobile_count": 1,
+        "reference_count": 1,
+        "sample_id": "微信图片_20260402152133_337_41.jpg",
+        "unmatched_mobile_indexes": [],
+        "unmatched_reference_indexes": []
+      }
+    ],
+    "invalid_reasons": [],
+    "label_mismatch_count": 0,
+    "max_confidence_delta": 0.2554497122764587,
+    "max_probability_delta": 0.1285115480422973,
+    "min_match_iou": 0.9149061572701401,
+    "mobile_count": 8,
+    "reference_count": 8
+  }
+}

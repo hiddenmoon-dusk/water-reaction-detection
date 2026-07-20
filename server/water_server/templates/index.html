@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}水体检测统计{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">ORBITAL WATER MONITORING / 公开统计节点</p>
+  <h1>水体样品检测概览</h1>
+  <p class="hero-copy">按每个反应管独立统计“含细菌”与“未检测到细菌”。页面仅展示汇总数据。</p>
+  <div class="hero-actions">
+    <a class="text-button" href="{{ url_for('public.desktop_download') }}">下载电脑端检测程序</a>
+    <a class="text-button" href="{{ url_for('public.mobile_download') }}">下载手机端检测程序</a>
+  </div>
+</section>
+
+<section class="statistics" data-statistics-url="{{ url_for('public.public_statistics') }}">
+  {% for item in statistics.water_types %}
+  {% set ratio = item.positive_ratio if item.positive_ratio is not none else 0 %}
+  <article class="water-panel" data-water-type="{{ item.water_type }}">
+    <div class="panel-index">0{{ loop.index }} / WATER BODY</div>
+    <div class="panel-heading">
+      <h2>{{ item.water_type }}</h2>
+      <span class="total">{{ item.total_count }} <small>个反应管</small></span>
+    </div>
+    <div class="chart-row">
+      <div class="donut" style="--positive: {{ ratio * 100 }};">
+        <div>
+          {% if item.positive_ratio is none %}
+          <strong>--</strong><span>暂无数据</span>
+          {% else %}
+          <strong>{{ "%.1f"|format(item.positive_ratio * 100) }}%</strong><span>含细菌</span>
+          {% endif %}
+        </div>
+      </div>
+      <dl>
+        <div><dt><i class="positive-dot"></i>含细菌</dt><dd class="positive-count">{{ item.positive_count }}</dd></div>
+        <div><dt><i class="negative-dot"></i>未检测到细菌</dt><dd class="negative-count">{{ item.negative_count }}</dd></div>
+      </dl>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<section class="update-band">
+  <span>DATASET GENERATION {{ statistics.dataset_generation }}</span>
+  <span>最后更新时间 <time id="updated-at">{{ statistics.updated_at }}</time></span>
+</section>
+{% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/charts.js') }}" defer></script>
+{% endblock %}
