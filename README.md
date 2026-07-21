@@ -176,18 +176,6 @@ assets/branding/   Android、Windows、官网共用的应用图标源和 PNG
 
 </details>
 
-## 服务器部署提示
-
-服务器生产部署必须使用 HTTPS，并通过受保护的环境变量提供生产配置。不要将管理员密码、Secret Key、bootstrap Token、数据库、用户照片、检测结果或服务器 SSH 私钥写入仓库。
-
-服务端公开页面：
-
-- [官网首页](https://hiddenmoon.duckdns.org/)
-- [用户隐私政策](https://hiddenmoon.duckdns.org/privacy)
-- [用户协议](https://hiddenmoon.duckdns.org/terms)
-
-服务器部署脚本和生产环境模板位于 `server/deploy/`，详细流程见 [正式发布指南](docs/正式发布指南.md)。
-
 ## 安全边界
 
 请勿提交以下内容：
