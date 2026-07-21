@@ -15,26 +15,37 @@
 
 检测结果用于技术辅助和人工复核，不能替代实验室检测、监管结论或其他专业判断。
 
-## 展示素材待补充
+## 产品展示
 
-README 的产品展示素材暂未补齐。后续请使用**不含个人隐私、账号信息、服务器地址、Token 或真实业务数据**的截图和视频替换下表中的占位内容。
+### Windows 主界面
 
-| 素材 | 建议放置位置/链接 | 应展示的内容 |
-| --- | --- | --- |
-| Windows 主界面截图 | `docs/screenshots/01-main-window.png` | 完整主界面、选择水样类型和图片入口 |
-| 检测结果截图 | `docs/screenshots/02-detection-result.png` | 识别框、标签、置信度、复核和保存入口 |
-| Android 流程截图 | `docs/screenshots/03-android-flow.png` | 选择照片、检测中、结果页三步拼图 |
-| 演示视频 | GitHub 上传视频或公开视频链接 | 30～90 秒：选择照片 → 检测 → 查看结果 → 保存/可选上传 |
+<p align="center">
+  <img src="docs/screenshots/01-main-window.png" width="720" alt="Windows 主界面">
+</p>
 
-<!--
-截图补充说明：
-1. 01-main-window.png：建议 1600×1000，展示 Windows 主界面，不要出现真实照片或个人信息。
-2. 02-detection-result.png：建议突出识别框、分类标签和结果复核，不要出现真实用户数据。
-3. 03-android-flow.png：建议将 Android 的选择图片、检测过程和结果页拼成一张图。
-4. 视频：建议 30～90 秒，使用演示样本，展示从选择照片到结果保存的完整流程。
-素材准备好后，将本表对应的说明保留或替换为真实媒体展示。
--->
+### 检测结果
 
+<p align="center">
+  <img src="docs/screenshots/02-detection-result.jpg" width="720" alt="检测结果界面">
+</p>
+
+### Android 使用流程
+
+<p align="center">
+  <img src="docs/screenshots/03-android-flow.jpg" width="900" alt="Android 使用流程">
+</p>
+
+### 操作演示视频
+
+点击下方截图打开约 43 秒的完整演示视频：
+
+<p align="center">
+  <a href="docs/media/demo-v1.0.5.mp4">
+    <img src="docs/screenshots/02-detection-result.jpg" width="720" alt="点击查看操作演示视频">
+  </a>
+</p>
+
+> 展示素材使用演示数据制作；实际上传照片前，请确认其中不含个人隐私。
 ## 核心功能
 
 - **Windows 桌面检测**：支持 Windows x64 便携运行，适合批量查看和复核水样照片。
